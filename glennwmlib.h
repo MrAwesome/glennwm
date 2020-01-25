@@ -16,3 +16,6 @@ void handle_keypress(Display *disp, XKeyEvent *xkey,
                      ModAndKeyAndCmd keybinding);
 
 void grabkey(Display *disp, ModAndKeyAndCmd keybinding);
+
+void maximize_top_window(Display* disp);
+Window get_top_window(Display* disp, Window root);
