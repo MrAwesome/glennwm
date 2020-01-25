@@ -6,11 +6,15 @@
 
 #include "glennwmlib.h"
 
+#define LOGMSG(x)                                                              \
+  FILE *f = fopen("/tmp/glennwm.log", "a+");                                   \
+  x;                                                                           \
+  fclose(f);
+
 #define BIND(x, y, z)                                                          \
   (ModAndKeyAndCmd) { x, y, z }
 
 // TODO: require less boilerplate
-
 static const char *cmd_clipmenu[] = {"clipmenu", NULL};
 static const char *cmd_termsmall[] = {"urxvt", "-geometry", "151x41", NULL};
 static const char *cmd_term[] = {"urxvt", "-geometry", "135x36", NULL};
