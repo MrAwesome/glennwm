@@ -20,7 +20,9 @@ static const char *cmd_termsmall[] = {"urxvt", "-geometry", "151x41", NULL};
 static const char *cmd_term[] = {"urxvt", "-geometry", "135x36", NULL};
 static const char *cmd_xterm[] = {"xterm", NULL};
 static const char *cmd_brave[] = {"brave", NULL};
+static const char *cmd_screenshot[] = {"maim", "-s", "/tmp/lol.png", NULL};
 
+void run_screenshot(Display *disp) { spawn(disp, cmd_screenshot); }
 void run_clipmenu(Display *disp) { spawn(disp, cmd_clipmenu); }
 void run_termsmall(Display *disp) { spawn(disp, cmd_termsmall); }
 void run_term(Display *disp) { spawn(disp, cmd_term); }
@@ -32,6 +34,7 @@ int main(void) {
   int i;
 
   ModAndKeyAndCmd cmds[] = {
+      BIND(Mod1Mask, XK_F2, run_screenshot),
       BIND(Mod1Mask, XK_F3, maximize_top_window),
       BIND(Mod1Mask, XK_F5, run_xterm),
       BIND(Mod1Mask, XK_F8, run_clipmenu),
