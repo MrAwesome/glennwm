@@ -16,18 +16,18 @@
 
 // TODO: require less boilerplate
 static const char *cmd_clipmenu[] = {"clipmenu", NULL};
-static const char *cmd_termsmall[] = {"urxvt", "-geometry", "151x41", NULL};
-static const char *cmd_term[] = {"urxvt", "-geometry", "135x36", NULL};
+static const char *cmd_term[] = {"urxvt", NULL};
+static const char *cmd_xkill[] = {"xkill", "-frame", NULL};
 static const char *cmd_xterm[] = {"xterm", NULL};
-static const char *cmd_brave[] = {"brave", NULL};
+static const char *cmd_browser[] = {"qutebrowser", NULL};
 static const char *cmd_screenshot[] = {"maim", "-s", "/tmp/lol.png", NULL};
 
 void run_screenshot(Display *disp) { spawn(disp, cmd_screenshot); }
 void run_clipmenu(Display *disp) { spawn(disp, cmd_clipmenu); }
-void run_termsmall(Display *disp) { spawn(disp, cmd_termsmall); }
+void run_xkill(Display *disp) { spawn(disp, cmd_xkill); }
 void run_term(Display *disp) { spawn(disp, cmd_term); }
 void run_xterm(Display *disp) { spawn(disp, cmd_xterm); }
-void run_brave(Display *disp) { spawn(disp, cmd_brave); }
+void run_browser(Display *disp) { spawn(disp, cmd_browser); }
 void run_quit(Display *disp) { exit(EXIT_SUCCESS); }
 
 int main(void) {
@@ -35,12 +35,12 @@ int main(void) {
 
   ModAndKeyAndCmd cmds[] = {
       BIND(Mod1Mask, XK_F2, run_screenshot),
-      BIND(Mod1Mask, XK_F3, maximize_top_window),
+      BIND(Mod1Mask, XK_F3, maximize_all_windows),
       BIND(Mod1Mask, XK_F5, run_xterm),
       BIND(Mod1Mask, XK_F8, run_clipmenu),
-      BIND(Mod1Mask, XK_F9, run_termsmall),
-      BIND(Mod1Mask, XK_F10, run_term),
-      BIND(Mod1Mask, XK_F11, run_brave),
+      BIND(Mod1Mask, XK_F9, run_term),
+      BIND(Mod1Mask, XK_F10, run_browser),
+      BIND(Mod1Mask, XK_F11, run_xkill),
       BIND(Mod1Mask, XK_F12, run_quit),
   };
   unsigned int num_cmds = (sizeof(cmds) / sizeof(ModAndKeyAndCmd));

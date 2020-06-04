@@ -18,5 +18,6 @@ void handle_keypress(Display *disp, XKeyEvent *xkey,
 void grabkey(Display *disp, ModAndKeyAndCmd keybinding);
 
 void maximize_top_window(Display* disp);
+void maximize_all_windows(Display* disp);
 Window get_top_window(Display* disp);
 Window get_second_window(Display* disp);
