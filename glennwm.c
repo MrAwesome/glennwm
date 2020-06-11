@@ -12,48 +12,41 @@
   x;                                                                           \
   fclose(f);
 
-#define BIND(x, y, z)                                                          \
-  (ModAndKeyAndCmd) { x, y, z }
+#define BIND(mod, key, cmd)                                                    \
+  (ModAndKeyAndCmd) { mod, key, cmd }
 
-// TODO: require less boilerplate
-static const char *cmd_clipmenu[] = {"clipmenu", NULL};
-static const char *cmd_term[] = {"urxvt", NULL};
-static const char *cmd_xkill[] = {"xkill", "-frame", NULL};
-static const char *cmd_xterm[] = {"xterm", NULL};
-static const char *cmd_browser[] = {"qutebrowser", NULL};
-static const char *cmd_screenshot[] = {"maim", "-s", "/tmp/lol.png", NULL};
-static const char *cmd_vol_up[] = {"pulsemixer", "--change-volume", "+3", NULL};
-static const char *cmd_vol_down[] = {"pulsemixer", "--change-volume", "-3", NULL};
-static const char *cmd_vol_mute[] = {"pulsemixer", "--toggle-mute", NULL};
+#define CMD_RUNNER(name, ...)                                           \
+  static const char *cmd_##name[] = {__VA_ARGS__};                            \
+  void name(Display *disp) { spawn(disp, cmd_##name); }
 
-void run_screenshot(Display *disp) { spawn(disp, cmd_screenshot); }
-void run_clipmenu(Display *disp) { spawn(disp, cmd_clipmenu); }
-void run_xkill(Display *disp) { spawn(disp, cmd_xkill); }
-void run_term(Display *disp) { spawn(disp, cmd_term); }
-void run_xterm(Display *disp) { spawn(disp, cmd_xterm); }
-void run_browser(Display *disp) { spawn(disp, cmd_browser); }
-void run_quit(Display *disp) { exit(EXIT_SUCCESS); }
-
-void vol_up(Display *disp) { spawn(disp, cmd_vol_up); }
-void vol_down(Display *disp) { spawn(disp, cmd_vol_down); }
-void vol_mute(Display *disp) { spawn(disp, cmd_vol_mute); }
+CMD_RUNNER(screenshot, "maim", "-s", "/tmp/lol.png", NULL)
+CMD_RUNNER(clipmenu, "clipmenu", NULL)
+CMD_RUNNER(terminal, "urxvt", NULL)
+CMD_RUNNER(xkill, "xkill", "-frame", NULL)
+CMD_RUNNER(browser, "qutebrowser", NULL)
+CMD_RUNNER(vol_up, "pulsemixer", "--change-volume", "+3", NULL)
+CMD_RUNNER(vol_down, "pulsemixer", "--change-volume", "-3", NULL)
+CMD_RUNNER(vol_mute, "pulsemixer", "--toggle-mute", NULL)
+CMD_RUNNER(player_toggle, "playerctl", "play-pause", NULL)
+void exit_wm(Display *disp) { exit(EXIT_SUCCESS); }
 
 int main(void) {
   int i;
 
   ModAndKeyAndCmd cmds[] = {
-      BIND(Mod1Mask, XK_F2, run_screenshot),
+      BIND(Mod1Mask, XK_F2, screenshot),
       BIND(Mod1Mask, XK_F3, maximize_all_windows),
-      BIND(Mod1Mask, XK_F5, run_xterm),
-      BIND(Mod1Mask, XK_F8, run_clipmenu),
-      BIND(Mod1Mask, XK_F9, run_term),
-      BIND(Mod1Mask, XK_F10, run_browser),
-      BIND(Mod1Mask, XK_F11, run_xkill),
-      BIND(Mod1Mask, XK_F12, run_quit),
+      BIND(Mod1Mask, XK_F8, clipmenu),
+      BIND(Mod1Mask, XK_F9, terminal),
+      BIND(Mod1Mask, XK_F10, browser),
+      BIND(Mod1Mask, XK_F11, xkill),
+      BIND(Mod1Mask, XK_F12, exit_wm),
       BIND(Mod4Mask, XK_y, vol_down),
       BIND(Mod4Mask, XK_u, vol_up),
       BIND(0, XF86XK_AudioLowerVolume, vol_down),
       BIND(0, XF86XK_AudioRaiseVolume, vol_up),
+      BIND(0, XF86XK_AudioPlay, player_toggle),
+      BIND(Mod4Mask, XK_q, player_toggle),
       BIND(0, XF86XK_AudioMute, vol_mute),
   };
   unsigned int num_cmds = (sizeof(cmds) / sizeof(ModAndKeyAndCmd));
@@ -65,7 +58,7 @@ int main(void) {
     return 1;
 
   // Start the WM with an appropriately-sized terminal in "fullscreen".
-  run_term(disp);
+  terminal(disp);
   maximize_all_windows(disp);
 
   for (i = 0; i < num_cmds; i++) {
