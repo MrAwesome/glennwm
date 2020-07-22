@@ -1,9 +1,9 @@
 # glennwm
-A very, very simple WM. For Glenn, By Glenn. 
+A fullscreen-only WM intended for reducing distractions and encouraging focus, particularly for programming and writing via the terminal.
 
-This is crafted very specifically for my own use case, feel free to tinker with it to match your own.
+This is crafted very specifically for my the author's own use case, but feel free to tinker with it to match your own.
 
-I recommend pairing with urxvt, kdeconnect, clipmenud, and unclutter - but feel free to customize as you see fit.
+Recommend pairings: urxvt, tmux, kdeconnect, clipmenud, and unclutter - but feel free to customize as you see fit.
 
 ## Installation
 Add at least the last line of this to `.xinitrc`:
